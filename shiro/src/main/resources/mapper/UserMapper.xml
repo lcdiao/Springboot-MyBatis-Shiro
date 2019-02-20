@@ -7,13 +7,20 @@
         <result column="password" property="password" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        id, name, password
+        id, name, password,perms
     </sql>
     <select id="findByName" resultType="user" parameterType="string" >
         select
         <include refid="Base_Column_List" />
         from user
         where name = #{value}
+    </select>
+
+    <select id="findById" resultType="user" parameterType="int" >
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where id = #{value}
     </select>
 
 

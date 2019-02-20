@@ -9,4 +9,11 @@ public interface UserMapper {
      * @return
      */
     public User findByName(String name);
+
+    /**
+     * 通过id找到user
+     * @param id
+     * @return
+     */
+    public User findById(Integer id);
 }

@@ -2,11 +2,13 @@ package cn.lcdiao.shiro.demo.shiro;
 
 import cn.lcdiao.shiro.demo.UserService.UserService;
 import cn.lcdiao.shiro.demo.domain.User;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserRealm extends AuthorizingRealm {
@@ -22,7 +24,13 @@ public class UserRealm extends AuthorizingRealm {
         //给资源进行授权
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //添加资源的授权字符串
-        info.addStringPermission("user:add");
+        //info.addStringPermission("user:add");
+
+        //到数据库查询当前登录用户的授权字符串
+        //获取当前用户
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User)subject.getPrincipal();
+        User dbUser = userService.findById(user.getId());//其实重复了。。。。。。。
 
         return info;
     }
@@ -54,7 +62,7 @@ public class UserRealm extends AuthorizingRealm {
         }
 
         //2、判断密码
-        return new SimpleAuthenticationInfo("",user.getPassword(),"");
+        return new SimpleAuthenticationInfo(user,user.getPassword(),"");
 
         //return null;
     }
