@@ -30,7 +30,9 @@ public class UserRealm extends AuthorizingRealm {
         //获取当前用户
         Subject subject = SecurityUtils.getSubject();
         User user = (User)subject.getPrincipal();
-        User dbUser = userService.findById(user.getId());//其实重复了。。。。。。。
+        User dbUser = userService.findById(user.getId());//
+
+        info.addStringPermission(dbUser.getPerms());    //添加资源的授权字符串
 
         return info;
     }
@@ -61,7 +63,7 @@ public class UserRealm extends AuthorizingRealm {
             return null;    //shiro底层会抛出UnknownAccountException
         }
 
-        //2、判断密码
+        //2、判断密码    第一个参数传递Principal，32行调用时才能获取到值
         return new SimpleAuthenticationInfo(user,user.getPassword(),"");
 
         //return null;
